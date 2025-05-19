@@ -1,14 +1,18 @@
 package com.app.bikerental.dao;
 
 import com.app.bikerental.model.*;
+import com.app.bikerental.util.BikeRequestQueue;
 import com.app.bikerental.util.IDGenerator;
 
 import java.io.*;
 import java.nio.file.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class BikeDAO {
     private static final String FILE = "data/bikes.txt";
+    private static final BikeRequestQueue requestQueue = new BikeRequestQueue();
+
 
     public static boolean addBike(Bike bike) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(FILE, true))) {
@@ -33,6 +37,19 @@ public class BikeDAO {
             e.printStackTrace();
         }
         return bikes;
+    }
+
+    public static List<Bike> getAvailableBikesByType(String type) {
+        List<Bike> allBikes = getAllBikes();
+        return allBikes.stream()
+                .filter(b -> b.isAvailable() &&
+                        b.getAvailability().equals(Bike.STATUS_AVAILABLE) &&
+                        b.getType().equalsIgnoreCase(type))
+                .collect(Collectors.toList());
+    }
+
+    public static BikeRequest getNextRequestForBikeType(String bikeType) {
+        return requestQueue.findRequestByBikeType(bikeType);
     }
 
     public static Bike getBikeById(String id) {

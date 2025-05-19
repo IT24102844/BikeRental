@@ -133,4 +133,66 @@ public class UserDAO {
             default -> null;
         };
     }
+
+    // In UserDAO.java
+    public static boolean addUser(User user) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(FILE_PATH, true))) {
+            bw.write(userToString(user));
+            bw.newLine();
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private static String userToString(User user) {
+        return String.join(",",
+                user.getId(),
+                user.getName(),
+                user.getUsername(),
+                user.getPassword(),
+                user.getEmail(),
+                user.getRole()
+        );
+    }
+
+    public static List<User> getAllUsers() {
+        List<User> users = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(FILE_PATH))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length >= 6) {
+                    User user = createUserFromParts(parts);
+                    if (user != null) {
+                        users.add(user);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return users;
+    }
+
+    private static User createUserFromParts(String[] parts) {
+        String id = parts[0];
+        String name = parts[1];
+        String username = parts[2];
+        String password = parts[3];
+        String email = parts[4];
+        String role = parts[5];
+
+        switch (role) {
+            case "Admin":
+                return new Admin(id, name, username, password, email);
+            case "Driver":
+                return new Driver(id, name, username, password, email);
+            case "Rider":
+                return new Rider(id, name, username, password, email);
+            default:
+                return null;
+        }
+    }
 }

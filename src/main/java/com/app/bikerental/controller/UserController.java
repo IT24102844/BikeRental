@@ -96,7 +96,7 @@ public class UserController extends HttpServlet {
             } else if (user instanceof Driver) {
                 resp.sendRedirect("bike");
             } else if (user instanceof Admin) {
-                resp.sendRedirect("adminDashboard.jsp");
+                resp.sendRedirect("admin");
             } else {
                 resp.sendRedirect("profile.jsp");
             }

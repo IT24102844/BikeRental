@@ -9,50 +9,40 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0b313c05-1617-4ecb-aaeb-fbe717b88536" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/material_theme_project_new.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.mvn/wrapper/maven-wrapper.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.mvn/wrapper/maven-wrapper.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mvnw" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mvnw.cmd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/app/bikerental/HelloServlet.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/app/bikerental/controller/BikeController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/app/bikerental/controller/RideController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/app/bikerental/controller/UserController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/app/bikerental/dao/BikeDAO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/app/bikerental/dao/RideDAO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/app/bikerental/dao/UserDAO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/app/bikerental/model/Admin.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/app/bikerental/model/Bike.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/app/bikerental/model/Driver.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/app/bikerental/model/ElectricBike.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/app/bikerental/model/ManualBike.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/app/bikerental/model/Ride.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/app/bikerental/model/Rider.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/app/bikerental/model/User.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/app/bikerental/util/BikeUtil.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/app/bikerental/util/IDGenerator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/app/bikerental/util/RideUtil.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/META-INF/beans.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/META-INF/persistence.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/web.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/add_bike.jsp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/driverDashboard.jsp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/edit_bike.jsp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/index.jsp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/login.jsp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/profile.jsp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/register.jsp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/ride_booking.jsp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/ride_dashboard.jsp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/ride_history.jsp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/shared_rides.jsp" afterDir="false" />
+    <list default="true" id="0b313c05-1617-4ecb-aaeb-fbe717b88536" name="Changes" comment="init-1">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/app/bikerental/controller/AdminController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/app/bikerental/controller/DeletePaymentServlet.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/app/bikerental/controller/DownloadBillServlet.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/app/bikerental/controller/FeedbackController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/app/bikerental/controller/MakePaymentServlet.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/app/bikerental/controller/RidePaymentServlet.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/app/bikerental/controller/ViewPaymentsServlet.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/app/bikerental/dao/FeedbackDAO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/app/bikerental/model/BikeRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/app/bikerental/model/Feedback.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/app/bikerental/model/Payment.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/app/bikerental/util/BikeRequestQueue.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/app/bikerental/util/PaymentUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/adminDashboard.jsp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/createFeedback.jsp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/manageFeedbacks.jsp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/paymentForm.jsp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/paymentHistory.jsp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/paymentSuccess.jsp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/request_queue.jsp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/webapp/viewFeedbacks.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/bikerental/controller/RideController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/app/bikerental/controller/RideController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/bikerental/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/app/bikerental/controller/UserController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/bikerental/dao/BikeDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/app/bikerental/dao/BikeDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/bikerental/dao/RideDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/app/bikerental/dao/RideDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/bikerental/dao/UserDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/app/bikerental/dao/UserDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/bikerental/model/Ride.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/app/bikerental/model/Ride.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/app/bikerental/util/RideUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/index.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/index.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/ride_booking.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/ride_booking.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/ride_dashboard.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/ride_dashboard.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/shared_rides.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/shared_rides.jsp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -94,22 +84,30 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;Tomcat Server.Tomcat 11.0.5.executor&quot;: &quot;Run&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;com.poratu.idea.plugins.tomcat.setting.TomcatServersConfigurable&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Tomcat Server.Tomcat 11.0.5.executor": "Run",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "com.poratu.idea.plugins.tomcat.setting.TomcatServersConfigurable",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\Y1S2\OOP\BikeRental\src\main\java\com\app\bikerental\util" />
+      <recent name="E:\Y1S2\OOP\BikeRental\src\main\java\com\app\bikerental\model" />
+      <recent name="E:\Y1S2\OOP\BikeRental\src\main\java\com\app\bikerental\controller" />
+      <recent name="E:\Y1S2\OOP\BikeRental\src\main\webapp" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="Tomcat 11.0.5" type="#com.intellij.j2ee.web.tomcat.TomcatRunConfigurationFactory" factoryName="Local" APPLICATION_SERVER_NAME="Tomcat 11.0.5" ALTERNATIVE_JRE_ENABLED="false">
       <deployment>
@@ -172,11 +170,24 @@
       <workItem from="1747476103182" duration="385000" />
       <workItem from="1747481132314" duration="139000" />
       <workItem from="1747481491828" duration="1162000" />
-      <workItem from="1747498644300" duration="341000" />
+      <workItem from="1747498644300" duration="56724000" />
     </task>
+    <task id="LOCAL-00001" summary="init-1">
+      <option name="closed" value="true" />
+      <created>1747499016953</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1747499016953</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="init-1" />
+    <option name="LAST_COMMIT_MESSAGE" value="init-1" />
   </component>
 </project>

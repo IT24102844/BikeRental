@@ -3,13 +3,12 @@ package com.app.bikerental.model;
 public class Ride {
     private String rideId;
     private String riderId;
+    private String driverId;
     private String bikeId;
     private String pickupLocation;
     private String dropLocation;
     private String status;
     private String timestamp;
-    private String rideType; // "Solo" or "Shared"
-    private int availableSeats; // For shared rides
 
     // Status constants
     public static final String STATUS_BOOKED = "Booked";
@@ -17,23 +16,18 @@ public class Ride {
     public static final String STATUS_COMPLETED = "Completed";
     public static final String STATUS_CANCELLED = "Cancelled";
 
-    // Ride type constants
-    public static final String TYPE_SOLO = "Solo";
-    public static final String TYPE_SHARED = "Shared";
-
     public Ride() {}
 
-    public Ride(String rideId, String riderId, String bikeId, String pickupLocation,
-                String dropLocation, String status, String timestamp, String rideType, int availableSeats) {
+    public Ride(String rideId, String riderId, String driverId, String bikeId, String pickupLocation,
+                String dropLocation, String status, String timestamp) {
         this.rideId = rideId;
         this.riderId = riderId;
+        this.driverId = driverId;
         this.bikeId = bikeId;
         this.pickupLocation = pickupLocation;
         this.dropLocation = dropLocation;
         this.status = status;
         this.timestamp = timestamp;
-        this.rideType = rideType;
-        this.availableSeats = availableSeats;
     }
 
     public String getRideId() {
@@ -50,6 +44,14 @@ public class Ride {
 
     public void setRiderId(String riderId) {
         this.riderId = riderId;
+    }
+
+    public String getDriverId() {
+        return driverId;
+    }
+
+    public void setDriverId(String driverId) {
+        this.driverId = driverId;
     }
 
     public String getBikeId() {
@@ -92,29 +94,13 @@ public class Ride {
         this.timestamp = timestamp;
     }
 
-    public String getRideType() {
-        return rideType;
-    }
-
-    public void setRideType(String rideType) {
-        this.rideType = rideType;
-    }
-
-    public int getAvailableSeats() {
-        return availableSeats;
-    }
-
-    public void setAvailableSeats(int availableSeats) {
-        this.availableSeats = availableSeats;
-    }
-
     @Override
     public String toString() {
         return String.join(",",
-                rideId, riderId, bikeId,
+                rideId, riderId, driverId, bikeId,
                 pickupLocation, dropLocation,
-                status, timestamp, rideType,
-                String.valueOf(availableSeats)
+                status, timestamp
         );
     }
+
 }

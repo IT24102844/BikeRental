@@ -3,24 +3,28 @@ package com.app.bikerental.controller;
 import com.app.bikerental.dao.BikeDAO;
 import com.app.bikerental.dao.RideDAO;
 import com.app.bikerental.model.Bike;
+import com.app.bikerental.model.BikeRequest;
 import com.app.bikerental.model.Ride;
-import com.app.bikerental.util.RideUtil;
+import com.app.bikerental.util.BikeRequestQueue;
+import com.app.bikerental.util.IDGenerator;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @WebServlet("/ride")
 public class RideController extends HttpServlet {
+    private static final BikeRequestQueue requestQueue = new BikeRequestQueue();
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getParameter("action");
 
-        // Default to dashboard if no action specified
         if (action == null) {
             resp.sendRedirect("ride?action=dashboard");
             return;
@@ -42,14 +46,21 @@ public class RideController extends HttpServlet {
                 case "history":
                     showRideHistory(req, resp, userId);
                     break;
-                case "findShared":
-                    findSharedRides(req, resp);
-                    break;
                 case "dashboard":
                     showDashboard(req, resp, userId);
                     break;
+                case "viewQueue":
+                    viewQueue(req, resp);
+                    break;
+                case "processNext":
+                    processNextRequest(req, resp);
+                    break;
+                case "clearQueue":
+                    clearQueue(req, resp);
+                    break;
                 default:
                     resp.sendRedirect("login.jsp");
+
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -75,8 +86,8 @@ public class RideController extends HttpServlet {
             case "updateStatus":
                 updateRideStatus(req, resp);
                 break;
-            case "joinShared":
-                joinSharedRide(req, resp, userId);
+            case "processRequest":
+                processSpecificRequest(req, resp);
                 break;
             default:
                 resp.sendRedirect("index.jsp");
@@ -99,35 +110,6 @@ public class RideController extends HttpServlet {
         req.getRequestDispatcher("ride_history.jsp").forward(req, resp);
     }
 
-    private void findSharedRides(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-        String pickup = req.getParameter("pickup");
-        String drop = req.getParameter("drop");
-
-        // Validate required parameters
-        if (pickup == null || pickup.trim().isEmpty() ||
-                drop == null || drop.trim().isEmpty()) {
-            resp.sendRedirect("shared_rides.jsp?error=Pickup+and+drop+locations+are+required");
-            return;
-        }
-
-        try {
-            List<Ride> sharedRides = RideUtil.matchSharedRides(
-                    RideDAO.getActiveSharedRides(),
-                    pickup.trim(),
-                    drop.trim()
-            );
-
-            req.setAttribute("sharedRides", sharedRides);
-            req.setAttribute("searchPickup", pickup);
-            req.setAttribute("searchDrop", drop);
-            req.getRequestDispatcher("shared_rides.jsp").forward(req, resp);
-        } catch (Exception e) {
-            e.printStackTrace();
-            resp.sendRedirect("shared_rides.jsp?error=Error+searching+shared+rides");
-        }
-    }
-
     private void showDashboard(HttpServletRequest req, HttpServletResponse resp, String userId)
             throws ServletException, IOException {
         List<Ride> activeRides = RideDAO.getRidesByRider(userId).stream()
@@ -142,38 +124,73 @@ public class RideController extends HttpServlet {
     private void bookRide(HttpServletRequest req, HttpServletResponse resp, String userId)
             throws IOException {
         String bikeId = req.getParameter("bikeId");
+        String bikeType = req.getParameter("bikeType"); // Added bikeType parameter
+        String pickupLocation = req.getParameter("pickupLocation");
+        String dropLocation = req.getParameter("dropLocation");
+
         if (bikeId == null || bikeId.isEmpty()) {
             resp.sendRedirect("ride_booking.jsp?error=No+bike+selected");
             return;
         }
 
-        Bike bike = BikeDAO.getBikeById(bikeId);
-        if (bike == null || !bike.isAvailable()) {
-            resp.sendRedirect("ride_booking.jsp?error=Bike+not+available");
-            return;
-        }
+        // Create a new bike request with bike type information
+        String requestId = IDGenerator.generateId("REQ");
+        BikeRequest request = new BikeRequest(requestId, userId, bikeId, bikeType,
+                pickupLocation, dropLocation);
+        requestQueue.enqueue(request);
 
-        Ride ride = new Ride();
-        ride.setRideId(RideDAO.generateRideId());
-        ride.setRiderId(userId);
-        ride.setBikeId(bikeId);
-        ride.setPickupLocation(req.getParameter("pickupLocation"));
-        ride.setDropLocation(req.getParameter("dropLocation"));
-        ride.setStatus(Ride.STATUS_BOOKED);
-        ride.setTimestamp(LocalDateTime.now().toString());
-        ride.setRideType(req.getParameter("rideType"));
-        ride.setAvailableSeats(ride.getRideType().equals(Ride.TYPE_SHARED) ? 1 : 0);
+        // Process the request
+        processRequest(request);
 
-        bike.setAvailable(false);
-        bike.setAvailability(Bike.STATUS_UNAVAILABLE);
+        resp.sendRedirect("ride?action=dashboard&msg=Ride+request+submitted");
+    }
 
+    private void processRequest(BikeRequest request) {
         try {
+            request.setStatus("PROCESSING");
+
+            Bike bike = BikeDAO.getBikeById(request.getBikeId());
+            if (bike == null || !bike.isAvailable()) {
+                request.setStatus("CANCELLED");
+                return;
+            }
+
+            // Create the ride using proper constructor
+            Ride ride = new Ride(
+                    RideDAO.generateRideId(),
+                    request.getUserId(),
+                    bike.getDriverId(),  // Make sure this is properly set
+                    request.getBikeId(),
+                    request.getPickupLocation(),
+                    request.getDropLocation(),
+                    Ride.STATUS_BOOKED,
+                    LocalDateTime.now().toString()
+            );
+
+            // Update bike availability
+            bike.setAvailable(false);
+            bike.setAvailability(Bike.STATUS_UNAVAILABLE);
+
+            // Save to database
             RideDAO.addRide(ride);
             BikeDAO.updateBike(bike);
-            resp.sendRedirect("ride?action=dashboard&msg=Ride+booked+successfully");
+
+            request.setStatus("COMPLETED");
         } catch (Exception e) {
-            resp.sendRedirect("ride_booking.jsp?error=Booking+failed");
+            e.printStackTrace();
+            request.setStatus("CANCELLED");
         }
+    }
+    // New method to process electric bike requests differently if needed
+    private void processElectricBikeRequest(BikeRequest request) {
+        // Special processing for electric bikes
+        processRequest(request); // Default processing for now
+    }
+
+    // New method to process manual bike requests differently if needed
+    private void processManualBikeRequest(BikeRequest request) {
+        // Special processing for manual bikes
+        processRequest(request); // Default processing for now
     }
 
     private void updateRideStatus(HttpServletRequest req, HttpServletResponse resp)
@@ -187,10 +204,21 @@ public class RideController extends HttpServlet {
             String previousStatus = ride.getStatus();
             ride.setStatus(newStatus);
 
-            // Update bike availability if changing to/from certain statuses
-            if (newStatus.equals(Ride.STATUS_CANCELLED) ||
-                    newStatus.equals(Ride.STATUS_COMPLETED)) {
+            if (newStatus.equals(Ride.STATUS_COMPLETED)) {
+                // Store ride in session for payment
+                HttpSession session = req.getSession();
+                session.setAttribute("rideForPayment", ride);
+                Bike bike = BikeDAO.getBikeById(ride.getBikeId());
+                if (bike != null) {
+                    bike.setAvailable(true);
+                    bike.setAvailability(Bike.STATUS_AVAILABLE);
+                    BikeDAO.updateBike(bike);
+                }
+                resp.sendRedirect("paymentForm.jsp");
+                return;
+            }
 
+            if (newStatus.equals(Ride.STATUS_CANCELLED)) {
                 Bike bike = BikeDAO.getBikeById(ride.getBikeId());
                 if (bike != null) {
                     bike.setAvailable(true);
@@ -200,7 +228,6 @@ public class RideController extends HttpServlet {
             }
             else if (previousStatus.equals(Ride.STATUS_BOOKED) &&
                     newStatus.equals(Ride.STATUS_IN_PROGRESS)) {
-                // Bike remains unavailable during ride
                 Bike bike = BikeDAO.getBikeById(ride.getBikeId());
                 if (bike != null) {
                     bike.setAvailable(false);
@@ -216,22 +243,83 @@ public class RideController extends HttpServlet {
         }
     }
 
-    private void joinSharedRide(HttpServletRequest req, HttpServletResponse resp, String userId)
-            throws IOException {
-        String rideId = req.getParameter("rideId");
+    private void viewQueue(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+        List<BikeRequest> requests = new ArrayList<>();
+        BikeRequestQueue tempQueue = new BikeRequestQueue();
 
-        Optional<Ride> optionalRide = RideDAO.getRideById(rideId);
-        if (optionalRide.isPresent()) {
-            Ride ride = optionalRide.get();
-            if (ride.getAvailableSeats() > 0) {
-                ride.setAvailableSeats(ride.getAvailableSeats() - 1);
-                RideDAO.updateRide(ride);
-                resp.sendRedirect("ride?action=dashboard&msg=Joined+shared+ride");
-            } else {
-                resp.sendRedirect("shared_rides.jsp?error=No+seats+available");
+        // Copy the queue to view its contents
+        synchronized (requestQueue) {
+            while (!requestQueue.isEmpty()) {
+                BikeRequest request = requestQueue.dequeue();
+                requests.add(request);
+                tempQueue.enqueue(request);
             }
-        } else {
-            resp.sendRedirect("shared_rides.jsp?error=Ride+not+found");
+
+            // Restore the queue
+            while (!tempQueue.isEmpty()) {
+                requestQueue.enqueue(tempQueue.dequeue());
+            }
+        }
+
+        req.setAttribute("requests", requests);
+        req.getRequestDispatcher("request_queue.jsp").forward(req, resp);
+    }
+
+    private void processNextRequest(HttpServletRequest req, HttpServletResponse resp)
+            throws IOException {
+        try {
+            BikeRequest request = requestQueue.dequeue();
+            if (request != null) {
+                processRequest(request);
+                resp.sendRedirect("ride?action=viewQueue&msg=Request+processed+successfully");
+            } else {
+                resp.sendRedirect("ride?action=viewQueue&error=No+requests+in+queue");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            resp.sendRedirect("ride?action=viewQueue&error=Error+processing+request");
+        }
+    }
+
+    private void clearQueue(HttpServletRequest req, HttpServletResponse resp)
+            throws IOException {
+        requestQueue.clear();
+        resp.sendRedirect("ride?action=viewQueue&msg=Queue+cleared+successfully");
+    }
+
+    private void processSpecificRequest(HttpServletRequest req, HttpServletResponse resp)
+            throws IOException {
+        String requestId = req.getParameter("requestId");
+        try {
+            BikeRequestQueue tempQueue = new BikeRequestQueue();
+            BikeRequest targetRequest = null;
+
+            synchronized (requestQueue) {
+                while (!requestQueue.isEmpty()) {
+                    BikeRequest request = requestQueue.dequeue();
+                    if (request.getRequestId().equals(requestId)) {
+                        targetRequest = request;
+                    } else {
+                        tempQueue.enqueue(request);
+                    }
+                }
+
+                // Restore the queue
+                while (!tempQueue.isEmpty()) {
+                    requestQueue.enqueue(tempQueue.dequeue());
+                }
+            }
+
+            if (targetRequest != null) {
+                processRequest(targetRequest);
+                resp.sendRedirect("ride?action=viewQueue&msg=Request+processed+successfully");
+            } else {
+                resp.sendRedirect("ride?action=viewQueue&error=Request+not+found");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            resp.sendRedirect("ride?action=viewQueue&error=Error+processing+request");
         }
     }
 }

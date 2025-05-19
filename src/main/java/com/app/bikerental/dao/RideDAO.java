@@ -29,13 +29,11 @@ public class RideDAO {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(",");
-                if (parts.length >= 9) {
+                if (parts.length >= 8) {
                     rides.add(new Ride(
                             parts[0], parts[1], parts[2],    // rideId, riderId, bikeId
                             parts[3], parts[4],             // pickup, drop
-                            parts[5], parts[6],             // status, timestamp
-                            parts[7],                        // rideType
-                            Integer.parseInt(parts[8])       // availableSeats
+                            parts[5], parts[6], parts[7]              // status, timestamp
                     ));
                 }
             }
@@ -57,13 +55,6 @@ public class RideDAO {
                 .collect(Collectors.toList());
     }
 
-    public static List<Ride> getActiveSharedRides() {
-        return getAllRides().stream()
-                .filter(r -> r.getRideType().equals(Ride.TYPE_SHARED))
-                .filter(r -> r.getStatus().equals(Ride.STATUS_BOOKED))
-                .filter(r -> r.getAvailableSeats() > 0)
-                .collect(Collectors.toList());
-    }
 
     public static boolean updateRide(Ride updatedRide) {
         List<Ride> rides = getAllRides();
